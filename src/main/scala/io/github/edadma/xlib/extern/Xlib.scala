@@ -38,7 +38,8 @@ object Xlib {
   type XChar2b              = CStruct0 //todo: 1064
   type XMappingEvent        = CStruct0 //todo: 912
   type XRectangle           = CStruct0 //todo: 430
-  type Screen               = CStruct0 //todo: 257
+  type Screen_s             = CStruct0 //todo: 257
+  type Screen               = Ptr[Screen_s] //todo: 257
   type _XrmHashBucketRec    = CStruct0
   type XOM                  = CStruct0
   type XWindowChanges       = CStruct0 //todo: 399
@@ -183,6 +184,30 @@ object Xlib {
   def XListHosts(display: Display, nhosts_return: Ptr[CInt], state_return: Ptr[Bool]): Ptr[XHostAddress] =
     extern //1681
 
+  def XRootWindow(display: Display, screen_number: CInt): Window        = extern //1765
+  def XDefaultRootWindow(display: Display): Window                      = extern //1769
+  def XRootWindowOfScreen(screen: Screen): Window                       = extern //1772
+  def XDefaultVisual(display: Display, screen_number: CInt): Visual     = extern //1775
+  def XDefaultVisualOfScreen(screen: Screen): Visual                    = extern //1779
+  def XDefaultGC(display: Display, screen_number: CInt): GC             = extern //1782
+  def XDefaultGCOfScreen(screen: Screen): GC                            = extern //1786
+  def XBlackPixel(display: Display, screen_number: CInt): CUnsignedLong = extern //1789
+  def XWhitePixel(display: Display, screen_number: CInt): CUnsignedLong = extern //1793
+  def XAllPlanes(): CUnsignedLong                                       = extern //1797
+  def XBlackPixelOfScreen(screen: Screen): CUnsignedLong                = extern //1800
+  def XWhitePixelOfScreen(screen: Screen): CUnsignedLong                = extern //1803
+  def XNextRequest(display: Display): CUnsignedLong                     = extern //1806
+  def XLastKnownRequestProcessed(display: Display): CUnsignedLong       = extern //1809
+  def XServerVendor(display: Display): CString                          = extern //1812
+  def XDisplayString(display: Display): CString                         = extern //1815
+  def XDefaultColormap(display: Display, screen_number: CInt): Colormap = extern //1818
+  def XDefaultColormapOfScreen(screen: Screen): Colormap                = extern //1822
+  def XDisplayOfScreen(screen: Screen): Display                         = extern //1825
+  def XScreenOfDisplay(display: Display, screen_number: CInt): Screen   = extern //1828
+  def XDefaultScreenOfDisplay(display: Display): Screen                 = extern //1832
+  def XEventMaskOfScreen(screen: Screen): CLong                         = extern //1835
+  def XScreenNumberOfScreen(screen: Screen): CInt                       = extern //1839
+
   def XCheckMaskEvent(display: Display, event_mask: CLong, event_return: Ptr[XEvent]): Bool = extern //2113
   def XCheckTypedEvent(display: Display, event_type: CInt, event_return: Ptr[XEvent]): Bool = extern //2119
   def XCheckTypedWindowEvent(display: Display, w: Window, event_type: CInt, event_return: Ptr[XEvent]): Bool =
@@ -233,14 +258,14 @@ object Xlib {
                  dest_y: CInt,
                  plane: CUnsignedLong): CInt                             = extern //2214
   def XDefaultDepth(display: Display, screen_number: CInt): CInt         = extern //2228
-  def XDefaultDepthOfScreen(screen: Ptr[Screen]): CInt                   = extern //2233
+  def XDefaultDepthOfScreen(screen: Screen): CInt                        = extern //2233
   def XDefaultScreen(display: Display): CInt                             = extern //2237
   def XDefineCursor(display: Display, w: Window, cursor: Cursor): CInt   = extern //2241
   def XDeleteProperty(display: Display, w: Window, property: Atom): CInt = extern //2247
   def XDestroyWindow(display: Display, w: Window): CInt                  = extern //2253
   def XDestroySubwindows(display: Display, w: Window): CInt              = extern //2258
-  def XDoesBackingStore(screen: Ptr[Screen]): CInt                       = extern //2263
-  def XDoesSaveUnders(screen: Ptr[Screen]): Bool                         = extern //2267
+  def XDoesBackingStore(screen: Screen): CInt                            = extern //2263
+  def XDoesSaveUnders(screen: Screen): Bool                              = extern //2267
   def XDisableAccessControl(display: Display): CInt                      = extern //2271
   def XDisplayCells(display: Display, screen_number: CInt): CInt         = extern //2276
   def XDisplayHeight(display: Display, screen_number: CInt): CInt        = extern //2281
@@ -455,10 +480,10 @@ object Xlib {
                    keyboard_mode: CInt,
                    confine_to: Window,
                    cursor: Cursor,
-                   time: Time): CInt               = extern //2739
-  def XGrabServer(display: Display): CInt          = extern //2751
-  def XHeightMMOfScreen(screen: Ptr[Screen]): CInt = extern //2755
-  def XHeightOfScreen(screen: Ptr[Screen]): CInt   = extern //2759
+                   time: Time): CInt          = extern //2739
+  def XGrabServer(display: Display): CInt     = extern //2751
+  def XHeightMMOfScreen(screen: Screen): CInt = extern //2755
+  def XHeightOfScreen(screen: Screen): CInt   = extern //2759
 
   def XImageByteOrder(display: Display): CInt                      = extern //2774
   def XInstallColormap(display: Display, colormap: Colormap): CInt = extern //2778
@@ -474,8 +499,8 @@ object Xlib {
   def XMapSubwindows(display: Display, w: Window): CInt                           = extern //2811
   def XMapWindow(display: Display, w: Window): CInt                               = extern //2816
   def XMaskEvent(display: Display, event_mask: CLong, event_return: XEvent): CInt = extern //2821
-  def XMaxCmapsOfScreen(screen: Ptr[Screen]): CInt                                = extern //2827
-  def XMinCmapsOfScreen(screen: Ptr[Screen]): CInt                                = extern //2831
+  def XMaxCmapsOfScreen(screen: Screen): CInt                                     = extern //2827
+  def XMinCmapsOfScreen(screen: Screen): CInt                                     = extern //2831
   def XMoveResizeWindow(display: Display,
                         w: Window,
                         x: CInt,
@@ -683,8 +708,8 @@ object Xlib {
                    src_height: CUnsignedInt,
                    dest_x: CInt,
                    dest_y: CInt): CInt                                                         = extern //3524
-  def XWidthMMOfScreen(screen: Ptr[Screen]): CInt                                              = extern //3536
-  def XWidthOfScreen(screen: Ptr[Screen]): CInt                                                = extern //3540
+  def XWidthMMOfScreen(screen: Screen): CInt                                                   = extern //3536
+  def XWidthOfScreen(screen: Screen): CInt                                                     = extern //3540
   def XWindowEvent(display: Display, w: Window, event_mask: CLong, event_return: XEvent): CInt = extern //3544
   def XWriteBitmapFile(display: Display,
                        filename: /*const*/ CString,
