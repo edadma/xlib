@@ -13,10 +13,6 @@ package object xlib {
 
   implicit class Display(val display: x11.Display) extends AnyVal {
 
-    def nextEvent(ev: XEvent): Int = x11.XNextEvent(display, ev.event)
-
-    def pending: Int = x11.XPending(display)
-
     def createSimpleWindow(parent: Window,
                            x: Int,
                            y: Int,
@@ -35,17 +31,19 @@ package object xlib {
                               border.toULong,
                               background.toULong)
 
+    def defaultRootWindow: Window = x11.XDefaultRootWindow(display)
+
     def closeDisplay: Int = x11.XCloseDisplay(display)
+
+    def defaultScreen: Int = x11.XDefaultScreen(display)
+
+    def nextEvent(ev: XEvent): Int = x11.XNextEvent(display, ev.event)
+
+    def pending: Int = x11.XPending(display)
 
     def mapWindow(w: Window): CInt = x11.XMapWindow(display, w)
 
     def selectInput(w: Window, event_mask: Long): Int = x11.XSelectInput(display, w, event_mask)
-
-    // macros
-
-    def defaultScreen: Int = x11.DefaultScreen(display)
-
-    def defaultRootWindow: Window = x11.DefaultRootWindow(display)
 
   }
 
