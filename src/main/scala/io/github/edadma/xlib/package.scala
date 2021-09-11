@@ -45,7 +45,7 @@ package object xlib {
 
     def defaultScreen: Int = x11.DefaultScreen(display)
 
-    def defaultRootWindow: Int = x11.DefaultRootWindow(display)
+    def defaultRootWindow: Window = x11.DefaultRootWindow(display)
 
   }
 

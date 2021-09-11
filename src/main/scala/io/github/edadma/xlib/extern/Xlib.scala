@@ -706,6 +706,6 @@ object Xlib {
   @name("xlib_DefaultScreen")
   def DefaultScreen(display: Display): CInt = extern //93
   @name("xlib_DefaultRootWindow")
-  def DefaultRootWindow(display: Display): CInt = extern //94
+  def DefaultRootWindow(display: Display): Window = extern //94
 
 }
