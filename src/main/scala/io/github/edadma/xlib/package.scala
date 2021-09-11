@@ -35,6 +35,8 @@ package object xlib {
                               border.toULong,
                               background.toULong)
 
+    def closeDisplay: Int = x11.XCloseDisplay(display)
+
     def mapWindow(w: Window): CInt = x11.XMapWindow(display, w)
 
     def selectInput(w: Window, event_mask: Long): Int = x11.XSelectInput(display, w, event_mask)

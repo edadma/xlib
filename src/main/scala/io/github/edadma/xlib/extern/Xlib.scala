@@ -41,6 +41,14 @@ object Xlib {
   type Screen               = CStruct0 //todo: 257
   type _XrmHashBucketRec    = CStruct0
   type XOM                  = CStruct0
+  type XWindowChanges       = CStruct0 //todo: 399
+  type XArc                 = CStruct0 //todo: 435
+  type XPoint               = CStruct0 //todo: 426
+  type XSegment             = CStruct0 //todo: 422
+  type XTextItem            = CStruct0 //todo: 1057
+  type XTextItem16          = CStruct0 //todo: 1069
+  type XKeyboardState       = CStruct0 //todo: 457
+  type XWindowAttributes    = CStruct0 //todo: 308
 
   def XLoadQueryFont(display: Display, name: /*const*/ CString): Ptr[XFontStruct] = extern //1394
   def XQueryFont(display: Display, font_ID: XID): Ptr[XFontStruct]                = extern //1399
@@ -174,6 +182,283 @@ object Xlib {
   def XListProperties(display: Display, w: Window, num_prop_return: Ptr[CInt]): Ptr[Atom] = extern //1676
   def XListHosts(display: Display, nhosts_return: Ptr[CInt], state_return: Ptr[Bool]): Ptr[XHostAddress] =
     extern //1681
+
+  def XCheckMaskEvent(display: Display, event_mask: CLong, event_return: Ptr[XEvent]): Bool = extern //2113
+  def XCheckTypedEvent(display: Display, event_type: CInt, event_return: Ptr[XEvent]): Bool = extern //2119
+  def XCheckTypedWindowEvent(display: Display, w: Window, event_type: CInt, event_return: Ptr[XEvent]): Bool =
+    extern //2125
+  def XCheckWindowEvent(display: Display, w: Window, event_mask: CLong, event_return: Ptr[XEvent]): Bool =
+    extern //2132
+  def XCirculateSubwindows(display: Display, w: Window, direction: CInt): CInt = extern //2139
+  def XCirculateSubwindowsDown(display: Display, w: Window): CInt              = extern //2145
+  def XCirculateSubwindowsUp(display: Display, w: Window): CInt                = extern //2150
+  def XClearArea(display: Display,
+                 w: Window,
+                 x: CInt,
+                 y: CInt,
+                 width: CUnsignedInt,
+                 height: CUnsignedInt,
+                 exposures: Bool): CInt               = extern //2155
+  def XClearWindow(display: Display, w: Window): CInt = extern //2165
+  def XCloseDisplay(display: Display): CInt           = extern //2170
+  def XConfigureWindow(display: Display, w: Window, value_mask: CUnsignedInt, values: Ptr[XWindowChanges]): CInt =
+    extern //2174
+  def XConnectionNumber(display: Display): CInt = extern //2181
+  def XConvertSelection(display: Display,
+                        selection: Atom,
+                        target: Atom,
+                        property: Atom,
+                        requestor: Window,
+                        time: Time): CInt = extern //2185
+  def XCopyArea(display: Display,
+                src: Drawable,
+                dest: Drawable,
+                gc: GC,
+                src_x: CInt,
+                src_y: CInt,
+                width: CUnsignedInt,
+                height: CUnsignedInt,
+                dest_x: CInt,
+                dest_y: CInt): CInt                                                = extern //2194
+  def XCopyGC(display: Display, src: GC, valuemask: CUnsignedLong, dest: GC): CInt = extern //2207
+  def XCopyPlane(display: Display,
+                 src: Drawable,
+                 dest: Drawable,
+                 gc: GC,
+                 src_x: CInt,
+                 src_y: CInt,
+                 width: CUnsignedInt,
+                 height: CUnsignedInt,
+                 dest_x: CInt,
+                 dest_y: CInt,
+                 plane: CUnsignedLong): CInt                             = extern //2214
+  def XDefaultDepth(display: Display, screen_number: CInt): CInt         = extern //2228
+  def XDefaultDepthOfScreen(screen: Ptr[Screen]): CInt                   = extern //2233
+  def XDefaultScreen(display: Display): CInt                             = extern //2237
+  def XDefineCursor(display: Display, w: Window, cursor: Cursor): CInt   = extern //2241
+  def XDeleteProperty(display: Display, w: Window, property: Atom): CInt = extern //2247
+  def XDestroyWindow(display: Display, w: Window): CInt                  = extern //2253
+  def XDestroySubwindows(display: Display, w: Window): CInt              = extern //2258
+  def XDoesBackingStore(screen: Ptr[Screen]): CInt                       = extern //2263
+  def XDoesSaveUnders(screen: Ptr[Screen]): Bool                         = extern //2267
+  def XDisableAccessControl(display: Display): CInt                      = extern //2271
+  def XDisplayCells(display: Display, screen_number: CInt): CInt         = extern //2276
+  def XDisplayHeight(display: Display, screen_number: CInt): CInt        = extern //2281
+  def XDisplayHeightMM(display: Display, screen_number: CInt): CInt      = extern //2286
+  def XDisplayKeycodes(display: Display, min_keycodes_return: Ptr[CInt], max_keycodes_return: Ptr[CInt]): CInt =
+    extern //2291
+  def XDisplayPlanes(display: Display, screen_number: CInt): CInt  = extern //2297
+  def XDisplayWidth(display: Display, screen_number: CInt): CInt   = extern //2302
+  def XDisplayWidthMM(display: Display, screen_number: CInt): CInt = extern //2307
+  def XDrawArc(display: Display,
+               d: Drawable,
+               gc: GC,
+               x: CInt,
+               y: CInt,
+               width: CUnsignedInt,
+               height: CUnsignedInt,
+               angle1: CInt,
+               angle2: CInt): CInt                                                         = extern //2312
+  def XDrawArcs(display: Display, d: Drawable, gc: GC, arcs: Ptr[XArc], narcs: CInt): CInt = extern //2324
+  def XDrawImageString(display: Display,
+                       d: Drawable,
+                       gc: GC,
+                       x: CInt,
+                       y: CInt,
+                       string: /*const*/ CString,
+                       length: CInt): CInt = extern //2332
+  def XDrawImageString16(display: Display,
+                         d: Drawable,
+                         gc: GC,
+                         x: CInt,
+                         y: CInt,
+                         string: Ptr[ /*const*/ XChar2b],
+                         length: CInt): CInt = extern //2342
+  def XDrawLine(display: Display, d: Drawable, gc: GC, x1: CInt, y1: CInt, x2: CInt, y2: CInt): CInt =
+    extern //2352
+  def XDrawLines(display: Display, d: Drawable, gc: GC, points: Ptr[XPoint], npoints: CInt, mode: CInt): CInt =
+    extern //2362
+  def XDrawPoint(display: Display, d: Drawable, gc: GC, x: CInt, y: CInt): CInt = extern //2371
+  def XDrawPoints(display: Display, d: Drawable, gc: GC, points: Ptr[XPoint], npoints: CInt, mode: CInt): CInt =
+    extern //2379
+  def XDrawRectangle(display: Display,
+                     d: Drawable,
+                     gc: GC,
+                     x: CInt,
+                     y: CInt,
+                     width: CUnsignedInt,
+                     height: CUnsignedInt): CInt = extern //2388
+  def XDrawRectangles(display: Display, d: Drawable, gc: GC, rectangles: Ptr[XRectangle], nrectangles: CInt): CInt =
+    extern //2398
+  def XDrawSegments(display: Display, d: Drawable, gc: GC, segments: Ptr[XSegment], nsegments: CInt): CInt =
+    extern //2406
+  def XDrawString(display: Display,
+                  d: Drawable,
+                  gc: GC,
+                  x: CInt,
+                  y: CInt,
+                  string: /*const*/ CString,
+                  length: CInt): CInt = extern //2414
+  def XDrawString16(display: Display,
+                    d: Drawable,
+                    gc: GC,
+                    x: CInt,
+                    y: CInt,
+                    string: Ptr[ /*const*/ XChar2b],
+                    length: CInt): CInt = extern //2424
+  def XDrawText(display: Display, d: Drawable, gc: GC, x: CInt, y: CInt, items: Ptr[XTextItem], nitems: CInt): CInt =
+    extern //2434
+  def XDrawText16(display: Display,
+                  d: Drawable,
+                  gc: GC,
+                  x: CInt,
+                  y: CInt,
+                  items: Ptr[XTextItem16],
+                  nitems: CInt): CInt                                                   = extern //2444
+  def XEnableAccessControl(display: Display): CInt                                      = extern //2454
+  def XEventsQueued(display: Display, mode: CInt): CInt                                 = extern //2458
+  def XFetchName(display: Display, w: Window, window_name_return: Ptr[CString]): Status = extern //2463
+  def XFillArc(display: Display,
+               d: Drawable,
+               gc: GC,
+               x: CInt,
+               y: CInt,
+               width: CUnsignedInt,
+               height: CUnsignedInt,
+               angle1: CInt,
+               angle2: CInt): CInt                                                         = extern //2469
+  def XFillArcs(display: Display, d: Drawable, gc: GC, arcs: Ptr[XArc], narcs: CInt): CInt = extern //2481
+  def XFillPolygon(display: Display,
+                   d: Drawable,
+                   gc: GC,
+                   points: Ptr[XPoint],
+                   npoints: CInt,
+                   shape: CInt,
+                   mode: CInt): CInt = extern //2489
+  def XFillRectangle(display: Display,
+                     d: Drawable,
+                     gc: GC,
+                     x: CInt,
+                     y: CInt,
+                     width: CUnsignedInt,
+                     height: CUnsignedInt): CInt = extern //2499
+  def XFillRectangles(display: Display, d: Drawable, gc: GC, rectangles: Ptr[XRectangle], nrectangles: CInt): CInt =
+    extern //2509
+  def XFlush(display: Display): CInt                            = extern //2517
+  def XForceScreenSaver(display: Display, mode: CInt): CInt     = extern //2521
+  def XFree(data: Ptr[Unit]): CInt                              = extern //2526
+  def XFreeColormap(display: Display, colormap: Colormap): CInt = extern //2530
+  def XFreeColors(display: Display,
+                  colormap: Colormap,
+                  pixels: Ptr[CUnsignedLong],
+                  npixels: CInt,
+                  planes: CUnsignedLong): CInt                                                  = extern //2535
+  def XFreeCursor(display: Display, cursor: Cursor): CInt                                       = extern //2543
+  def XFreeExtensionList(list: Ptr[CString]): CInt                                              = extern //2548
+  def XFreeFont(display: Display, font_struct: Ptr[XFontStruct]): CInt                          = extern //2552
+  def XFreeFontInfo(names: Ptr[CString], free_info: Ptr[XFontStruct], actual_count: CInt): CInt = extern //2557
+  def XFreeFontNames(list: Ptr[CString]): CInt                                                  = extern //2563
+  def XFreeFontPath(list: Ptr[CString]): CInt                                                   = extern //2567
+  def XFreeGC(display: Display, gc: GC): CInt                                                   = extern //2571
+  def XFreeModifiermap(modmap: Ptr[XModifierKeymap]): CInt                                      = extern //2576
+  def XFreePixmap(display: Display, pixmap: Pixmap): CInt                                       = extern //2580
+  def XGeometry(display: Display,
+                screen: CInt,
+                position: /*const*/ CString,
+                default_position: /*const*/ CString,
+                bwidth: CUnsignedInt,
+                fwidth: CUnsignedInt,
+                fheight: CUnsignedInt,
+                xadder: CInt,
+                yadder: CInt,
+                x_return: Ptr[CInt],
+                y_return: Ptr[CInt],
+                width_return: Ptr[CInt],
+                height_return: Ptr[CInt]): CInt = extern //2585
+  def XGetErrorDatabaseText(display: Display,
+                            name: /*const*/ CString,
+                            message: /*const*/ CString,
+                            default_string: /*const*/ CString,
+                            buffer_return: CString,
+                            length: CInt): CInt                                               = extern //2601
+  def XGetErrorText(display: Display, code: CInt, buffer_return: CString, length: CInt): CInt = extern //2610
+  def XGetFontProperty(font_struct: Ptr[XFontStruct], atom: Atom, value_return: Ptr[CUnsignedLong]): Bool =
+    extern //2617
+  def XGetGCValues(display: Display, gc: GC, valuemask: CUnsignedLong, values_return: Ptr[XGCValues]): Status =
+    extern //2623
+  def XGetGeometry(display: Display,
+                   d: Drawable,
+                   root_return: Ptr[Window],
+                   x_return: Ptr[CInt],
+                   y_return: Ptr[CInt],
+                   width_return: Ptr[CUnsignedInt],
+                   height_return: Ptr[CUnsignedInt],
+                   border_width_return: Ptr[CUnsignedInt],
+                   depth_return: Ptr[CUnsignedInt]): Status                             = extern //2630
+  def XGetIconName(display: Display, w: Window, icon_name_return: Ptr[CString]): Status = extern //2642
+  def XGetInputFocus(display: Display, focus_return: Ptr[Window], revert_to_return: Ptr[CInt]): CInt =
+    extern //2648
+  def XGetKeyboardControl(display: Display, values_return: Ptr[XKeyboardState]): CInt = extern //2654
+  def XGetPointerControl(display: Display,
+                         accel_numerator_return: Ptr[CInt],
+                         accel_denominator_return: Ptr[CInt],
+                         threshold_return: Ptr[CInt]): CInt                                  = extern //2659
+  def XGetPointerMapping(display: Display, map_return: Ptr[CUnsignedChar], nmap: CInt): CInt = extern //2666
+  def XGetScreenSaver(display: Display,
+                      timeout_return: Ptr[CInt],
+                      interval_return: Ptr[CInt],
+                      prefer_blanking_return: Ptr[CInt],
+                      allow_exposures_return: Ptr[CInt]): CInt                                   = extern //2672
+  def XGetTransientForHint(display: Display, w: Window, prop_window_return: Ptr[Window]): Status = extern //2680
+  def XGetWindowProperty(display: Display,
+                         w: Window,
+                         property: Atom,
+                         long_offset: CLong,
+                         long_length: CLong,
+                         delete: Bool,
+                         req_type: Atom,
+                         actual_type_return: Ptr[Atom],
+                         actual_format_return: Ptr[CInt],
+                         nitems_return: Ptr[CUnsignedLong],
+                         bytes_after_return: Ptr[CUnsignedLong],
+                         prop_return: Ptr[Ptr[CUnsignedChar]]): CInt = extern //2686
+  def XGetWindowAttributes(display: Display, w: Window, window_attributes_return: Ptr[XWindowAttributes]): Status =
+    extern //2701
+  def XGrabButton(display: Display,
+                  button: CUnsignedInt,
+                  modifiers: CUnsignedInt,
+                  grab_window: Window,
+                  owner_events: Bool,
+                  event_mask: CUnsignedInt,
+                  pointer_mode: CInt,
+                  keyboard_mode: CInt,
+                  confine_to: Window,
+                  cursor: Cursor): CInt = extern //2707
+  def XGrabKey(display: Display,
+               keycode: CInt,
+               modifiers: CUnsignedInt,
+               grab_window: Window,
+               owner_events: Bool,
+               pointer_mode: CInt,
+               keyboard_mode: CInt): CInt = extern //2720
+  def XGrabKeyboard(display: Display,
+                    grab_window: Window,
+                    owner_events: Bool,
+                    pointer_mode: CInt,
+                    keyboard_mode: CInt,
+                    time: Time): CInt = extern //2730
+  def XGrabPointer(display: Display,
+                   grab_window: Window,
+                   owner_events: Bool,
+                   event_mask: CUnsignedInt,
+                   pointer_mode: CInt,
+                   keyboard_mode: CInt,
+                   confine_to: Window,
+                   cursor: Cursor,
+                   time: Time): CInt               = extern //2739
+  def XGrabServer(display: Display): CInt          = extern //2751
+  def XHeightMMOfScreen(screen: Ptr[Screen]): CInt = extern //2755
+  def XHeightOfScreen(screen: Ptr[Screen]): CInt   = extern //2759
 
   def XImageByteOrder(display: Display): CInt                      = extern //2774
   def XInstallColormap(display: Display, colormap: Colormap): CInt = extern //2778
