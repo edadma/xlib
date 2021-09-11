@@ -9,12 +9,39 @@ import scala.scalanative.unsigned._
 package object xlib {
 
   type Drawable = x11.Drawable
+  type Window   = x11.Window
 
-  implicit class Display(val ptr: x11.Display) extends AnyVal {
+  implicit class Display(val display: x11.Display) extends AnyVal {
 
-    def nextEvent(ev: XEvent): Int = x11.XNextEvent(ptr, ev.event)
+    def nextEvent(ev: XEvent): Int = x11.XNextEvent(display, ev.event)
 
-    def pending: Int = x11.XPending(ptr)
+    def pending: Int = x11.XPending(display)
+
+    def createSimpleWindow(parent: Window,
+                           x: Int,
+                           y: Int,
+                           width: Int,
+                           height: Int,
+                           border_width: Int,
+                           border: Long,
+                           background: Long): Window =
+      x11.XCreateSimpleWindow(display,
+                              parent,
+                              x,
+                              y,
+                              width.toUInt,
+                              height.toUInt,
+                              border_width.toUInt,
+                              border.toULong,
+                              background.toULong)
+
+    def selectInput(w: Window, event_mask: Long): Int = x11.XSelectInput(display, w, event_mask)
+
+    // macros
+
+    def defaultScreen: Int = x11.DefaultScreen(display)
+
+    def defaultRootWindow: Int = x11.DefaultRootWindow(display)
 
   }
 
@@ -32,12 +59,6 @@ package object xlib {
 
   def openDisplay(display_name: String): Display =
     Zone(implicit z => x11.XOpenDisplay(if (display_name eq null) null else toCString(display_name)))
-
-  // macros
-
-  def defaultScreen(display: Display): CInt = x11.DefaultScreen(display.ptr)
-
-  def defaultRootWindow(display: Display): CInt = x11.DefaultRootWindow(display.ptr)
 
   /*****************************************************************
     * RESERVED RESOURCE AND CONSTANT DEFINITIONS
