@@ -13,6 +13,8 @@ package object xlib {
 
   implicit class Display(val display: x11.Display) extends AnyVal {
 
+    def isNull: Boolean = display eq null
+
     def createSimpleWindow(parent: Window,
                            x: Int,
                            y: Int,
