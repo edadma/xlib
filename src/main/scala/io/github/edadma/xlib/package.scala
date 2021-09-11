@@ -57,6 +57,8 @@ package object xlib {
     private[xlib] val event: x11.XEvent = malloc(sizeof[CLong] * 24.toULong).asInstanceOf[x11.XEvent]
     private val freed                   = false
 
+    def eventType: Int = !event
+
     def destroy(): Unit = {
       require(!freed, "event object already destroyed")
       free(event.asInstanceOf[Ptr[Byte]])
