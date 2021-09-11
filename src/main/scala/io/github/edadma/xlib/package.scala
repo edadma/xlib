@@ -10,4 +10,6 @@ package object xlib {
 
   }
 
+  implicit class Visual(val visual: x11.Visual) extends AnyVal {}
+
 }
