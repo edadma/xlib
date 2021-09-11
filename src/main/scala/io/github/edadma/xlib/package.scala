@@ -10,11 +10,11 @@ package object xlib {
 
   type Drawable = x11.Drawable
 
-  implicit class Display(val display: x11.Display) extends AnyVal {
+  implicit class Display(val ptr: x11.Display) extends AnyVal {
 
-    def XNextEvent(ev: XEvent): Int = x11.XNextEvent(display, ev.event)
+    def nextEvent(ev: XEvent): Int = x11.XNextEvent(ptr, ev.event)
 
-    def XPending: Int = x11.XPending(display)
+    def pending: Int = x11.XPending(ptr)
 
   }
 
@@ -29,6 +29,15 @@ package object xlib {
       free(event.asInstanceOf[Ptr[Byte]])
     }
   }
+
+  def openDisplay(display_name: String): Display =
+    Zone(implicit z => x11.XOpenDisplay(if (display_name eq null) null else toCString(display_name)))
+
+  // macros
+
+  def defaultScreen(display: Display): CInt = x11.DefaultScreen(display.ptr)
+
+  def defaultRootWindow(display: Display): CInt = x11.DefaultRootWindow(display.ptr)
 
   /*****************************************************************
     * RESERVED RESOURCE AND CONSTANT DEFINITIONS
