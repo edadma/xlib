@@ -17,7 +17,7 @@ object Xlib {
   type KeySym               = XID
   type KeyCode              = CUnsignedChar
   type Display              = Ptr[CStruct0]
-  type XEvent               = Ptr[CStruct0] //todo: 973
+  type XEvent               = Ptr[CInt] //todo: 973
   type Visual_s             = CStruct0 //todo: 227
   type Visual               = Ptr[Visual_s]
   type GC                   = Ptr[CStruct0]
