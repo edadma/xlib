@@ -1,6 +1,6 @@
 name := "xlib"
 
-version := "0.1.0.pre.14"
+version := "0.1.0.pre.15"
 
 scalaVersion := "2.13.6"
 
