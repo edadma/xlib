@@ -100,21 +100,14 @@ implicit class XKeyEvent(val ptr: Ptr[lib.XKeyEvent]) extends AnyVal {
    */
 
   class XEvent(val ptr: lib.XEvent = malloc(sizeof[CLong] * 24.toULong).asInstanceOf[lib.XEvent]) extends AnyVal {
-//    protected[xlib]
-//
-//    private val freed = false
-
     def getType: Int = !ptr
 
     def xkey: XKeyEvent = XKeyEvent(ptr.asInstanceOf[lib.XKeyEvent])
 
-    def destroy(): Unit = {
-//      require(!freed, "event object already destroyed")
-      free(ptr.asInstanceOf[Ptr[Byte]])
-    }
+    def destroy(): Unit = free(ptr.asInstanceOf[Ptr[Byte]])
   }
 
-  implicit class XKeyEvent(val ptr: lib.XKeyEvent) {
+  implicit class XKeyEvent(val ptr: lib.XKeyEvent) extends AnyVal {
     def getType: Int        = ptr._1
     def serial: Long        = ptr._2.toLong
     def sendEvent: Boolean  = bool(ptr._3)
