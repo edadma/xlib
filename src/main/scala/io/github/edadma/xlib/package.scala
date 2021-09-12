@@ -1,6 +1,6 @@
 package io.github.edadma
 
-import io.github.edadma.xlib.extern.{Xlib => x11}
+import io.github.edadma.xlib.extern.{Xlib => lib}
 
 import scala.scalanative.unsafe._
 import scala.scalanative.libc.stdlib._
@@ -8,10 +8,12 @@ import scala.scalanative.unsigned._
 
 package object xlib {
 
-  type Drawable = x11.Drawable
-  type Window   = x11.Window
+  type Drawable = lib.Drawable
+  type Window   = lib.Window
+  type Screen   = lib.Screen
+  type Pixmap   = lib.Pixmap
 
-  implicit class Display(val display: x11.Display) extends AnyVal {
+  implicit class Display(val display: lib.Display) extends AnyVal {
 
     def isNull: Boolean = display eq null
 
@@ -23,7 +25,7 @@ package object xlib {
                            border_width: Int,
                            border: Long,
                            background: Long): Window =
-      x11.XCreateSimpleWindow(display,
+      lib.XCreateSimpleWindow(display,
                               parent,
                               x,
                               y,
@@ -33,28 +35,28 @@ package object xlib {
                               border.toULong,
                               background.toULong)
 
-    def defaultRootWindow: Window = x11.XDefaultRootWindow(display)
+    def defaultRootWindow: Window = lib.XDefaultRootWindow(display)
 
-    def defaultVisual(screen_number: Int): Visual = x11.XDefaultVisual(display, screen_number)
+    def defaultVisual(screen_number: Int): Visual = lib.XDefaultVisual(display, screen_number)
 
-    def closeDisplay: Int = x11.XCloseDisplay(display)
+    def closeDisplay: Int = lib.XCloseDisplay(display)
 
-    def defaultScreen: Int = x11.XDefaultScreen(display)
+    def defaultScreen: Int = lib.XDefaultScreen(display)
 
-    def nextEvent(ev: XEvent): Int = x11.XNextEvent(display, ev.event)
+    def nextEvent(ev: XEvent): Int = lib.XNextEvent(display, ev.event)
 
-    def pending: Int = x11.XPending(display)
+    def pending: Int = lib.XPending(display)
 
-    def mapWindow(w: Window): CInt = x11.XMapWindow(display, w)
+    def mapWindow(w: Window): CInt = lib.XMapWindow(display, w)
 
-    def selectInput(w: Window, event_mask: Long): Int = x11.XSelectInput(display, w, event_mask)
+    def selectInput(w: Window, event_mask: Long): Int = lib.XSelectInput(display, w, event_mask)
 
   }
 
-  implicit class Visual(val visual: x11.Visual) extends AnyVal {}
+  implicit class Visual(val visual: lib.Visual) extends AnyVal {}
 
   class XEvent {
-    private[xlib] val event: x11.XEvent = malloc(sizeof[CLong] * 24.toULong).asInstanceOf[x11.XEvent]
+    private[xlib] val event: lib.XEvent = malloc(sizeof[CLong] * 24.toULong).asInstanceOf[lib.XEvent]
     private val freed                   = false
 
     def eventType: Int = !event
@@ -66,7 +68,7 @@ package object xlib {
   }
 
   def openDisplay(display_name: String): Display =
-    Zone(implicit z => x11.XOpenDisplay(if (display_name eq null) null else toCString(display_name)))
+    Zone(implicit z => lib.XOpenDisplay(if (display_name eq null) null else toCString(display_name)))
 
   /*****************************************************************
     * RESERVED RESOURCE AND CONSTANT DEFINITIONS
