@@ -51,7 +51,7 @@ package object xlib {
 
     def defaultScreen: Int = lib.XDefaultScreen(ptr)
 
-    def nextEvent(ev: XEvent): Int = lib.XNextEvent(ptr, ev.ptr)
+    def nextEvent(ev: Event): Int = lib.XNextEvent(ptr, ev.ptr)
 
     def pending: Int = lib.XPending(ptr)
 
@@ -63,15 +63,17 @@ package object xlib {
 
   implicit class Visual(val visual: lib.Visual) extends AnyVal {}
 
-  class XEvent(val ptr: lib.XEvent = malloc(sizeof[CLong] * 24.toULong).asInstanceOf[lib.XEvent]) extends AnyVal {
+  class Event(val ptr: lib.XEvent = malloc(sizeof[CLong] * 24.toULong).asInstanceOf[lib.XEvent]) extends AnyVal {
     def getType: Int = !ptr
 
-    def xkey: XKeyEvent = XKeyEvent(ptr.asInstanceOf[lib.XKeyEvent])
+    def key: KeyEvent = KeyEvent(ptr.asInstanceOf[lib.XKeyEvent])
+
+    def button: ButtonEvent = ButtonEvent(ptr.asInstanceOf[lib.XKeyEvent])
 
     def destroy(): Unit = free(ptr.asInstanceOf[Ptr[Byte]])
   }
 
-  implicit class XKeyEvent(val ptr: lib.XKeyEvent) extends AnyVal {
+  implicit class KeyEvent(val ptr: lib.XKeyEvent) extends AnyVal {
     def lookupKeysym(index: Int): KeySym = lib.XLookupKeysym(ptr, index).toLong
 
     def lookupString: (String, KeySym) = {
@@ -112,6 +114,50 @@ package object xlib {
     def yRoot_=(v: Int): Unit          = ptr._12 = v
     def state_=(v: Int): Unit          = ptr._13 = v.toUInt
     def keycode_=(v: Int): Unit        = ptr._14 = v.toUInt
+    def sameScreen_=(v: Boolean): Unit = ptr._15 = bool2int(v)
+  }
+
+  implicit class ButtonEvent(val ptr: lib.XKeyEvent) extends AnyVal {
+    def lookupKeysym(index: Int): KeySym = lib.XLookupKeysym(ptr, index).toLong
+
+    def lookupString: (String, KeySym) = {
+      val buffer_return = stackalloc[CChar](50)
+      val keysym_return = stackalloc[lib.KeySym]
+
+      lib.XLookupString(ptr, buffer_return, 50, keysym_return, null)
+      (fromCString(buffer_return), (!keysym_return).toLong)
+    }
+
+    def getType: Int        = ptr._1
+    def serial: Long        = ptr._2.toLong
+    def sendEvent: Boolean  = bool(ptr._3)
+    def display: Display    = ptr._4
+    def window: Window      = ptr._5
+    def root: Window        = ptr._6
+    def subwindow: Window   = ptr._7
+    def time: Time          = ptr._8.toLong
+    def x: Int              = ptr._9
+    def y: Int              = ptr._10
+    def xRoot: Int          = ptr._11
+    def yRoot: Int          = ptr._12
+    def state: Int          = ptr._13.toInt
+    def button: Int         = ptr._14.toInt
+    def sameScreen: Boolean = bool(ptr._15)
+
+    def type_=(v: Int): Unit           = ptr._1 = v
+    def serial_=(v: Long): Unit        = ptr._2 = v.toULong
+    def sendEvent_=(v: Boolean): Unit  = ptr._3 = bool2int(v)
+    def display_=(v: Display): Unit    = ptr._4 = v.ptr
+    def window_=(v: Window): Unit      = ptr._5 = v
+    def root_=(v: Window): Unit        = ptr._6 = v
+    def subwindow_=(v: Window): Unit   = ptr._7 = v
+    def time_=(v: Time): Unit          = ptr._8 = v.toULong
+    def x_=(v: Int): Unit              = ptr._9 = v
+    def y_=(v: Int): Unit              = ptr._10 = v
+    def xRoot_=(v: Int): Unit          = ptr._11 = v
+    def yRoot_=(v: Int): Unit          = ptr._12 = v
+    def state_=(v: Int): Unit          = ptr._13 = v.toUInt
+    def button_=(v: Int): Unit         = ptr._14 = v.toUInt
     def sameScreen_=(v: Boolean): Unit = ptr._15 = bool2int(v)
   }
 

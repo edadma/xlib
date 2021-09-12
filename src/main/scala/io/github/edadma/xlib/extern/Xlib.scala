@@ -66,6 +66,22 @@ object Xlib {
               CUnsignedInt,
               CUnsignedInt,
               Bool]] //571
+  type XButtonEvent = Ptr[
+    CStruct15[CInt,
+              CUnsignedLong,
+              Bool,
+              Display,
+              Window,
+              Window,
+              Window,
+              Time,
+              CInt,
+              CInt,
+              CInt,
+              CInt,
+              CUnsignedInt,
+              CUnsignedInt,
+              Bool]] //575
   type XComposeStatus = Ptr[CStruct0] //todo: Xutil.h 231
 
   def XLoadQueryFont(display: Display, name: /*const*/ CString): Ptr[XFontStruct] = extern //1394
