@@ -13,6 +13,7 @@ package object xlib {
   type Screen   = lib.Screen
   type Pixmap   = lib.Pixmap
   type Time     = Long
+  type KeySym   = Long
 
   private def bool(a: CInt): Boolean = if (a == 0) false else true
 
@@ -108,6 +109,16 @@ implicit class XKeyEvent(val ptr: Ptr[lib.XKeyEvent]) extends AnyVal {
   }
 
   implicit class XKeyEvent(val ptr: lib.XKeyEvent) extends AnyVal {
+    def lookupKeysym(index: Int): KeySym = lib.XLookupKeysym(ptr, index).toLong
+
+    def lookupString: (String, KeySym) = {
+      val buffer_return = stackalloc[CChar](50)
+      val keysym_return = stackalloc[lib.KeySym]
+
+      lib.XLookupString(ptr, buffer_return, 50, keysym_return, null)
+      (fromCString(buffer_return), (!keysym_return).toLong)
+    }
+
     def getType: Int        = ptr._1
     def serial: Long        = ptr._2.toLong
     def sendEvent: Boolean  = bool(ptr._3)

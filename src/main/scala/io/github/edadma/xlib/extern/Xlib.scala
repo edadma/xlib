@@ -66,6 +66,7 @@ object Xlib {
               CUnsignedInt,
               CUnsignedInt,
               Bool]] //571
+  type XComposeStatus = Ptr[CStruct0] //todo: Xutil.h 231
 
   def XLoadQueryFont(display: Display, name: /*const*/ CString): Ptr[XFontStruct] = extern //1394
   def XQueryFont(display: Display, font_ID: XID): Ptr[XFontStruct]                = extern //1399
@@ -199,6 +200,8 @@ object Xlib {
   def XListProperties(display: Display, w: Window, num_prop_return: Ptr[CInt]): Ptr[Atom] = extern //1676
   def XListHosts(display: Display, nhosts_return: Ptr[CInt], state_return: Ptr[Bool]): Ptr[XHostAddress] =
     extern //1681
+
+  def XLookupKeysym(key_event: XKeyEvent, index: CInt): KeySym = extern //1696
 
   def XRootWindow(display: Display, screen_number: CInt): Window        = extern //1765
   def XDefaultRootWindow(display: Display): Window                      = extern //1769
@@ -742,11 +745,12 @@ object Xlib {
               res_class: /*const*/ CString): XOM = extern //3567
   def XCloseOM(om: XOM): Status                  = extern //3574
 
-  // macros
+  // Xutil.h
 
-  @name("xlib_DefaultScreen")
-  def DefaultScreen(display: Display): CInt = extern //93
-  @name("xlib_DefaultRootWindow")
-  def DefaultRootWindow(display: Display): Window = extern //94
+  def XLookupString(event_struct: XKeyEvent,
+                    buffer_return: CString,
+                    bytes_buffer: CInt,
+                    keysym_return: Ptr[KeySym],
+                    status_in_out: Ptr[XComposeStatus]): CInt = extern //534
 
 }
