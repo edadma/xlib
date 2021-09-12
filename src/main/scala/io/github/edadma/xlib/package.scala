@@ -92,50 +92,52 @@ implicit class XKeyEvent(val ptr: Ptr[lib.XKeyEvent]) extends AnyVal {
 }
    */
 
-  class XEvent {
-    protected[xlib] val ptr: lib.XEvent = malloc(sizeof[CLong] * 24.toULong).asInstanceOf[lib.XEvent]
-
-    private val freed = false
+  class XEvent(val ptr: lib.XEvent = malloc(sizeof[CLong] * 24.toULong).asInstanceOf[lib.XEvent]) extends AnyVal {
+//    protected[xlib]
+//
+//    private val freed = false
 
     def getType: Int = !ptr
 
+    def xkey:
+
     def destroy(): Unit = {
-      require(!freed, "event object already destroyed")
+//      require(!freed, "event object already destroyed")
       free(ptr.asInstanceOf[Ptr[Byte]])
     }
   }
 
-  class XKeyEvent extends XEvent {
-    def type: CInt = ptr._1
-    def serial: CUnsignedLong = ptr._2
-    def sendEvent: Bool = ptr._3
-    def display: Ptr[Display] = ptr._4
-    def window: Window = ptr._5
-    def root: Window = ptr._6
-    def subwindow: Window = ptr._7
-    def time: Time = ptr._8
-    def x: CInt = ptr._9
-    def y: CInt = ptr._10
-    def xRoot: CInt = ptr._11
-    def yRoot: CInt = ptr._12
-    def state: CUnsignedInt = ptr._13
-    def keycode: CUnsignedInt = ptr._14
-    def sameScreen: Bool = ptr._15
-    def type_=(v: CInt) = ptr._1 = v
+  implicit class XKeyEvent(val ptr: lib.XKeyEvent) extends XEvent {
+    def getType: CInt              = ptr._1
+    def serial: CUnsignedLong      = ptr._2
+    def sendEvent: Bool            = ptr._3
+    def display: Ptr[Display]      = ptr._4
+    def window: Window             = ptr._5
+    def root: Window               = ptr._6
+    def subwindow: Window          = ptr._7
+    def time: Time                 = ptr._8
+    def x: CInt                    = ptr._9
+    def y: CInt                    = ptr._10
+    def xRoot: CInt                = ptr._11
+    def yRoot: CInt                = ptr._12
+    def state: CUnsignedInt        = ptr._13
+    def keycode: CUnsignedInt      = ptr._14
+    def sameScreen: Bool           = ptr._15
+    def type_=(v: CInt)            = ptr._1 = v
     def serial_=(v: CUnsignedLong) = ptr._2 = v
-    def sendEvent_=(v: Bool) = ptr._3 = v
+    def sendEvent_=(v: Bool)       = ptr._3 = v
     def display_=(v: Ptr[Display]) = ptr._4 = v
-    def window_=(v: Window) = ptr._5 = v
-    def root_=(v: Window) = ptr._6 = v
-    def subwindow_=(v: Window) = ptr._7 = v
-    def time_=(v: Time) = ptr._8 = v
-    def x_=(v: CInt) = ptr._9 = v
-    def y_=(v: CInt) = ptr._10 = v
-    def xRoot_=(v: CInt) = ptr._11 = v
-    def yRoot_=(v: CInt) = ptr._12 = v
-    def state_=(v: CUnsignedInt) = ptr._13 = v
+    def window_=(v: Window)        = ptr._5 = v
+    def root_=(v: Window)          = ptr._6 = v
+    def subwindow_=(v: Window)     = ptr._7 = v
+    def time_=(v: Time)            = ptr._8 = v
+    def x_=(v: CInt)               = ptr._9 = v
+    def y_=(v: CInt)               = ptr._10 = v
+    def xRoot_=(v: CInt)           = ptr._11 = v
+    def yRoot_=(v: CInt)           = ptr._12 = v
+    def state_=(v: CUnsignedInt)   = ptr._13 = v
     def keycode_=(v: CUnsignedInt) = ptr._14 = v
-    def sameScreen_=(v: Bool) = ptr._15 = v
+    def sameScreen_=(v: Bool)      = ptr._15 = v
   }
 
   def openDisplay(display_name: String): Display =
