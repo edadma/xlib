@@ -68,7 +68,9 @@ package object xlib {
 
     def key: KeyEvent = KeyEvent(ptr.asInstanceOf[lib.XKeyEvent])
 
-    def button: ButtonEvent = ButtonEvent(ptr.asInstanceOf[lib.XKeyEvent])
+    def button: ButtonEvent = ButtonEvent(ptr.asInstanceOf[lib.XButtonEvent])
+
+    def motion: MotionEvent = MotionEvent(ptr.asInstanceOf[lib.XMotionEvent])
 
     def destroy(): Unit = free(ptr.asInstanceOf[Ptr[Byte]])
   }
