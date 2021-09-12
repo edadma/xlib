@@ -151,7 +151,7 @@ package object xlib {
     def sameScreen_=(v: Boolean): Unit = ptr._15 = bool2int(v)
   }
 
-  implicit class ButtonEvent(val ptr: lib.XMotionEvent) extends AnyVal {
+  implicit class MotionEvent(val ptr: lib.XMotionEvent) extends AnyVal {
     def getType: Int        = ptr._1
     def serial: Long        = ptr._2.toLong
     def sendEvent: Boolean  = bool(ptr._3)
