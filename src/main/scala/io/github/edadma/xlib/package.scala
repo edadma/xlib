@@ -12,10 +12,17 @@ package object xlib {
   type Window   = lib.Window
   type Screen   = lib.Screen
   type Pixmap   = lib.Pixmap
+  type Time     = Long
 
-  implicit class Display(val display: lib.Display) extends AnyVal {
+  private def bool(a: CInt): Boolean = if (a == 0) false else true
 
-    def isNull: Boolean = display eq null
+  private def bool(a: CUnsignedInt): Boolean = if (a == 0.toUInt) false else true
+
+  private def bool2int(a: Boolean): CInt = if (a) 1 else 0
+
+  implicit class Display(val ptr: lib.Display) extends AnyVal {
+
+    def isNull: Boolean = ptr eq null
 
     def createSimpleWindow(parent: Window,
                            x: Int,
@@ -25,7 +32,7 @@ package object xlib {
                            border_width: Int,
                            border: Long,
                            background: Long): Window =
-      lib.XCreateSimpleWindow(display,
+      lib.XCreateSimpleWindow(ptr,
                               parent,
                               x,
                               y,
@@ -35,21 +42,21 @@ package object xlib {
                               border.toULong,
                               background.toULong)
 
-    def defaultRootWindow: Window = lib.XDefaultRootWindow(display)
+    def defaultRootWindow: Window = lib.XDefaultRootWindow(ptr)
 
-    def defaultVisual(screen_number: Int): Visual = lib.XDefaultVisual(display, screen_number)
+    def defaultVisual(screen_number: Int): Visual = lib.XDefaultVisual(ptr, screen_number)
 
-    def closeDisplay: Int = lib.XCloseDisplay(display)
+    def closeDisplay: Int = lib.XCloseDisplay(ptr)
 
-    def defaultScreen: Int = lib.XDefaultScreen(display)
+    def defaultScreen: Int = lib.XDefaultScreen(ptr)
 
-    def nextEvent(ev: XEvent): Int = lib.XNextEvent(display, ev.ptr)
+    def nextEvent(ev: XEvent): Int = lib.XNextEvent(ptr, ev.ptr)
 
-    def pending: Int = lib.XPending(display)
+    def pending: Int = lib.XPending(ptr)
 
-    def mapWindow(w: Window): CInt = lib.XMapWindow(display, w)
+    def mapWindow(w: Window): CInt = lib.XMapWindow(ptr, w)
 
-    def selectInput(w: Window, event_mask: Long): Int = lib.XSelectInput(display, w, event_mask)
+    def selectInput(w: Window, event_mask: Long): Int = lib.XSelectInput(ptr, w, event_mask)
 
   }
 
@@ -99,7 +106,7 @@ implicit class XKeyEvent(val ptr: Ptr[lib.XKeyEvent]) extends AnyVal {
 
     def getType: Int = !ptr
 
-    def xkey:
+    def xkey: XKeyEvent = XKeyEvent(ptr.asInstanceOf[lib.XKeyEvent])
 
     def destroy(): Unit = {
 //      require(!freed, "event object already destroyed")
@@ -107,37 +114,38 @@ implicit class XKeyEvent(val ptr: Ptr[lib.XKeyEvent]) extends AnyVal {
     }
   }
 
-  implicit class XKeyEvent(val ptr: lib.XKeyEvent) extends XEvent {
-    def getType: CInt              = ptr._1
-    def serial: CUnsignedLong      = ptr._2
-    def sendEvent: Bool            = ptr._3
-    def display: Ptr[Display]      = ptr._4
-    def window: Window             = ptr._5
-    def root: Window               = ptr._6
-    def subwindow: Window          = ptr._7
-    def time: Time                 = ptr._8
-    def x: CInt                    = ptr._9
-    def y: CInt                    = ptr._10
-    def xRoot: CInt                = ptr._11
-    def yRoot: CInt                = ptr._12
-    def state: CUnsignedInt        = ptr._13
-    def keycode: CUnsignedInt      = ptr._14
-    def sameScreen: Bool           = ptr._15
-    def type_=(v: CInt)            = ptr._1 = v
-    def serial_=(v: CUnsignedLong) = ptr._2 = v
-    def sendEvent_=(v: Bool)       = ptr._3 = v
-    def display_=(v: Ptr[Display]) = ptr._4 = v
-    def window_=(v: Window)        = ptr._5 = v
-    def root_=(v: Window)          = ptr._6 = v
-    def subwindow_=(v: Window)     = ptr._7 = v
-    def time_=(v: Time)            = ptr._8 = v
-    def x_=(v: CInt)               = ptr._9 = v
-    def y_=(v: CInt)               = ptr._10 = v
-    def xRoot_=(v: CInt)           = ptr._11 = v
-    def yRoot_=(v: CInt)           = ptr._12 = v
-    def state_=(v: CUnsignedInt)   = ptr._13 = v
-    def keycode_=(v: CUnsignedInt) = ptr._14 = v
-    def sameScreen_=(v: Bool)      = ptr._15 = v
+  implicit class XKeyEvent(val ptr: lib.XKeyEvent) {
+    def getType: Int        = ptr._1
+    def serial: Long        = ptr._2.toLong
+    def sendEvent: Boolean  = bool(ptr._3)
+    def display: Display    = ptr._4
+    def window: Window      = ptr._5
+    def root: Window        = ptr._6
+    def subwindow: Window   = ptr._7
+    def time: Time          = ptr._8.toLong
+    def x: Int              = ptr._9
+    def y: Int              = ptr._10
+    def xRoot: Int          = ptr._11
+    def yRoot: Int          = ptr._12
+    def state: Int          = ptr._13.toInt
+    def keycode: Int        = ptr._14.toInt
+    def sameScreen: Boolean = bool(ptr._15)
+
+    def type_=(v: Int): Unit           = ptr._1 = v
+    def serial_=(v: Long): Unit        = ptr._2 = v.toULong
+    def sendEvent_=(v: Boolean): Unit  = ptr._3 = bool2int(v)
+    def display_=(v: Display): Unit    = ptr._4 = v.ptr
+    def window_=(v: Window): Unit      = ptr._5 = v
+    def root_=(v: Window): Unit        = ptr._6 = v
+    def subwindow_=(v: Window): Unit   = ptr._7 = v
+    def time_=(v: Time): Unit          = ptr._8 = v.toULong
+    def x_=(v: Int): Unit              = ptr._9 = v
+    def y_=(v: Int): Unit              = ptr._10 = v
+    def xRoot_=(v: Int): Unit          = ptr._11 = v
+    def yRoot_=(v: Int): Unit          = ptr._12 = v
+    def state_=(v: Int): Unit          = ptr._13 = v.toUInt
+    def keycode_=(v: Int): Unit        = ptr._14 = v.toUInt
+    def sameScreen_=(v: Boolean): Unit = ptr._15 = bool2int(v)
   }
 
   def openDisplay(display_name: String): Display =

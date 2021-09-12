@@ -50,21 +50,22 @@ object Xlib {
   type XTextItem16          = CStruct0 //todo: 1069
   type XKeyboardState       = CStruct0 //todo: 457
   type XWindowAttributes    = CStruct0 //todo: 308
-  type XKeyEvent = CStruct15[CInt,
-                             CUnsignedLong,
-                             Bool,
-                             Ptr[Display],
-                             Window,
-                             Window,
-                             Window,
-                             Time,
-                             CInt,
-                             CInt,
-                             CInt,
-                             CInt,
-                             CUnsignedInt,
-                             CUnsignedInt,
-                             Bool] //571
+  type XKeyEvent = Ptr[
+    CStruct15[CInt,
+              CUnsignedLong,
+              Bool,
+              Display,
+              Window,
+              Window,
+              Window,
+              Time,
+              CInt,
+              CInt,
+              CInt,
+              CInt,
+              CUnsignedInt,
+              CUnsignedInt,
+              Bool]] //571
 
   def XLoadQueryFont(display: Display, name: /*const*/ CString): Ptr[XFontStruct] = extern //1394
   def XQueryFont(display: Display, font_ID: XID): Ptr[XFontStruct]                = extern //1399
