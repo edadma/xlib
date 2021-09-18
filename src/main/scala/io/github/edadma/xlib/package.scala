@@ -48,6 +48,10 @@ package object xlib {
 
     def defaultVisual(screen_number: Int): Visual = lib.XDefaultVisual(ptr, screen_number)
 
+    def blackPixel(screen_number: Int): Long = lib.XBlackPixel(ptr, screen_number).toLong
+
+    def whitePixel(screen_number: Int): Long = lib.XWhitePixel(ptr, screen_number).toLong
+
     def circulateSubwindows(w: Window, direction: Int): Int = lib.XCirculateSubwindows(ptr, w, direction)
 
     def closeDisplay: Int = lib.XCloseDisplay(ptr)
