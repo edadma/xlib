@@ -51,6 +51,8 @@ package object xlib {
 
     def defaultScreen: Int = lib.XDefaultScreen(ptr)
 
+    def flush: Int = lib.XFlush(ptr)
+
     def nextEvent(ev: Event): Int = lib.XNextEvent(ptr, ev.ptr)
 
     def pending: Int = lib.XPending(ptr)
@@ -58,6 +60,8 @@ package object xlib {
     def mapWindow(w: Window): CInt = lib.XMapWindow(ptr, w)
 
     def selectInput(w: Window, event_mask: Long): Int = lib.XSelectInput(ptr, w, event_mask)
+
+    def sync(discard: Boolean): Int = lib.XSync(ptr, bool2int(discard))
 
   }
 
