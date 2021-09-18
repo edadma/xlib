@@ -56,6 +56,17 @@ package object xlib {
 
     def closeDisplay: Int = lib.XCloseDisplay(ptr)
 
+    def copyArea(src: Drawable,
+                 dest: Drawable,
+                 gc: GC,
+                 src_x: Int,
+                 src_y: Int,
+                 width: Int,
+                 height: Int,
+                 dest_x: Int,
+                 dest_y: Int): Int =
+      lib.XCopyArea(ptr, src, dest, gc.ptr, src_x, src_y, width.toUInt, height.toUInt, dest_x, dest_y)
+
     def defaultScreen: Int = lib.XDefaultScreen(ptr)
 
     def flush: Int = lib.XFlush(ptr)
@@ -81,7 +92,9 @@ package object xlib {
     def unmapWindow(w: Window): Int = lib.XUnmapWindow(ptr, w)
   }
 
-  implicit class Visual(val visual: lib.Visual) extends AnyVal {}
+  implicit class GC(val ptr: lib.GC) extends AnyVal
+
+  implicit class Visual(val visual: lib.Visual) extends AnyVal
 
   class Event(val ptr: lib.XEvent = malloc(sizeof[CLong] * 24.toULong).asInstanceOf[lib.XEvent]) extends AnyVal {
     def getType: Int = !ptr
