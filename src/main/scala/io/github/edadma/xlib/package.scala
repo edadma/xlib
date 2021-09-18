@@ -48,6 +48,8 @@ package object xlib {
 
     def defaultVisual(screen_number: Int): Visual = lib.XDefaultVisual(ptr, screen_number)
 
+    def circulateSubwindows(w: Window, direction: Int): Int = lib.XCirculateSubwindows(ptr, w, direction)
+
     def closeDisplay: Int = lib.XCloseDisplay(ptr)
 
     def defaultScreen: Int = lib.XDefaultScreen(ptr)
@@ -69,6 +71,7 @@ package object xlib {
 
     def sync(discard: Boolean): Int = lib.XSync(ptr, bool2int(discard))
 
+    def unmapWindow(w: Window): Int = lib.XUnmapWindow(ptr, w)
   }
 
   implicit class Visual(val visual: lib.Visual) extends AnyVal {}
