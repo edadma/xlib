@@ -61,7 +61,9 @@ package object xlib {
 
     def pending: Int = lib.XPending(ptr)
 
-    def mapWindow(w: Window): CInt = lib.XMapWindow(ptr, w)
+    def mapRaised(w: Window): Int = lib.XMapRaised(ptr, w)
+
+    def mapWindow(w: Window): Int = lib.XMapWindow(ptr, w)
 
     def selectInput(w: Window, event_mask: Long): Int = lib.XSelectInput(ptr, w, event_mask)
 
