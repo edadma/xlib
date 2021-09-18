@@ -63,6 +63,9 @@ package object xlib {
     def internAtom(atom_name: /*const*/ String, only_if_exists: Boolean): Atom =
       Zone(implicit z => lib.XInternAtom(ptr, toCString(atom_name), bool2int(only_if_exists))) // todo: may have to create "atom zone"
 
+    def createPixmap(d: Drawable, width: Int, height: Int, depth: Int): Pixmap =
+      lib.XCreatePixmap(ptr, d, width.toUInt, height.toUInt, depth.toUInt)
+
     def nextEvent(ev: Event): Int = lib.XNextEvent(ptr, ev.ptr)
 
     def pending: Int = lib.XPending(ptr)
