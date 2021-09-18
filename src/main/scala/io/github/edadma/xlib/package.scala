@@ -14,6 +14,7 @@ package object xlib {
   type Pixmap   = lib.Pixmap
   type Time     = Long
   type KeySym   = Long
+  type Atom     = lib.Atom
 
   private def bool(a: CInt): Boolean = if (a == 0) false else true
 
@@ -52,6 +53,9 @@ package object xlib {
     def defaultScreen: Int = lib.XDefaultScreen(ptr)
 
     def flush: Int = lib.XFlush(ptr)
+
+    def internAtom(atom_name: /*const*/ String, only_if_exists: Boolean): Atom =
+      Zone(implicit z => lib.XInternAtom(ptr, toCString(atom_name), bool2int(only_if_exists))) // todo: may have to create "atom zone"
 
     def nextEvent(ev: Event): Int = lib.XNextEvent(ptr, ev.ptr)
 
