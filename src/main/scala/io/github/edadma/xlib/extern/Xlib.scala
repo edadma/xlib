@@ -259,6 +259,99 @@ object Xlib {
   def XEventMaskOfScreen(screen: Screen): CLong                         = extern //1835
   def XScreenNumberOfScreen(screen: Screen): CInt                       = extern //1839
 
+  def XSetIOErrorExitHandler(display: Ptr[Display], handler: XIOErrorExitHandler, user_data: Ptr[Unit]): Unit =
+    extern //1866
+  def XListPixmapFormats(display: Ptr[Display], count_return: Ptr[CInt]): Ptr[XPixmapFormatValues] = extern //1872
+  def XListDepths(display: Ptr[Display], screen_number: CInt, count_return: Ptr[CInt]): Ptr[CInt]  = extern //1876
+  def XReconfigureWMWindow(display: Ptr[Display],
+                           w: Window,
+                           screen_number: CInt,
+                           mask: CUnsignedInt,
+                           changes: Ptr[XWindowChanges]): Status = extern //1882
+  def XGetWMProtocols(display: Ptr[Display],
+                      w: Window,
+                      protocols_return: Ptr[Ptr[Atom]],
+                      count_return: Ptr[CInt]): Status                                             = extern //1890
+  def XSetWMProtocols(display: Ptr[Display], w: Window, protocols: Ptr[Atom], count: CInt): Status = extern //1896
+  def XIconifyWindow(display: Ptr[Display], w: Window, screen_number: CInt): Status                = extern //1902
+  def XWithdrawWindow(display: Ptr[Display], w: Window, screen_number: CInt): Status               = extern //1907
+  def XGetCommand(display: Ptr[Display], w: Window, argv_return: Ptr[Ptr[CString]], argc_return: Ptr[CInt]): Status =
+    extern //1912
+  def XGetWMColormapWindows(display: Ptr[Display],
+                            w: Window,
+                            windows_return: Ptr[Ptr[Window]],
+                            count_return: Ptr[CInt]): Status = extern //1918
+  def XSetWMColormapWindows(display: Ptr[Display], w: Window, colormap_windows: Ptr[Window], count: CInt): Status =
+    extern //1924
+  def XFreeStringList(list: Ptr[CString]): Unit                                                  = extern //1930
+  def XSetTransientForHint(display: Ptr[Display], w: Window, prop_window: Window): CInt          = extern //1933
+  def XActivateScreenSaver(display: Ptr[Display]): CInt                                          = extern //1940
+  def XAddHost(display: Ptr[Display], host: Ptr[XHostAddress]): CInt                             = extern //1944
+  def XAddHosts(display: Ptr[Display], hosts: Ptr[XHostAddress], num_hosts: CInt): CInt          = extern //1949
+  def XAddToExtensionList(structure: Ptr[Ptr[_XExtData]], ext_data: Ptr[XExtData]): CInt         = extern //1955
+  def XAddToSaveSet(display: Ptr[Display], w: Window): CInt                                      = extern //1960
+  def XAllocColor(display: Ptr[Display], colormap: Colormap, screen_in_out: Ptr[XColor]): Status = extern //1965
+  def XAllocColorCells(display: Ptr[Display],
+                       colormap: Colormap,
+                       contig: Bool,
+                       plane_masks_return: Ptr[CUnsignedLong],
+                       nplanes: CUnsignedInt,
+                       pixels_return: Ptr[CUnsignedLong],
+                       npixels: CUnsignedInt): Status = extern //1971
+  def XAllocColorPlanes(display: Ptr[Display],
+                        colormap: Colormap,
+                        contig: Bool,
+                        pixels_return: Ptr[CUnsignedLong],
+                        ncolors: CInt,
+                        nreds: CInt,
+                        ngreens: CInt,
+                        nblues: CInt,
+                        rmask_return: Ptr[CUnsignedLong],
+                        gmask_return: Ptr[CUnsignedLong],
+                        bmask_return: Ptr[CUnsignedLong]): Status = extern //1981
+  def XAllocNamedColor(display: Ptr[Display],
+                       colormap: Colormap,
+                       color_name: /*const*/ CString,
+                       screen_def_return: Ptr[XColor],
+                       exact_def_return: Ptr[XColor]): Status                 = extern //1995
+  def XAllowEvents(display: Ptr[Display], event_mode: CInt, time: Time): CInt = extern //2003
+  def XAutoRepeatOff(display: Ptr[Display]): CInt                             = extern //2009
+  def XAutoRepeatOn(display: Ptr[Display]): CInt                              = extern //2013
+  def XBell(display: Ptr[Display], percent: CInt): CInt                       = extern //2017
+  def XBitmapBitOrder(display: Ptr[Display]): CInt                            = extern //2022
+  def XBitmapPad(display: Ptr[Display]): CInt                                 = extern //2026
+  def XBitmapUnit(display: Ptr[Display]): CInt                                = extern //2030
+  def XCellsOfScreen(screen: Ptr[Screen]): CInt                               = extern //2034
+  def XChangeActivePointerGrab(display: Ptr[Display], event_mask: CUnsignedInt, cursor: Cursor, time: Time): CInt =
+    extern //2038
+  def XChangeGC(display: Ptr[Display], gc: GC, valuemask: CUnsignedLong, values: Ptr[XGCValues]): CInt = extern //2045
+  def XChangeKeyboardControl(display: Ptr[Display], value_mask: CUnsignedLong, values: Ptr[XKeyboardControl]): CInt =
+    extern //2052
+  def XChangeKeyboardMapping(display: Ptr[Display],
+                             first_keycode: CInt,
+                             keysyms_per_keycode: CInt,
+                             keysyms: Ptr[KeySym],
+                             num_codes: CInt): CInt = extern //2058
+  def XChangePointerControl(display: Ptr[Display],
+                            do_accel: Bool,
+                            do_threshold: Bool,
+                            accel_numerator: CInt,
+                            accel_denominator: CInt,
+                            threshold: CInt): CInt = extern //2066
+  def XChangeProperty(display: Ptr[Display],
+                      w: Window,
+                      property: Atom,
+                      typ: Atom,
+                      format: CInt,
+                      mode: CInt,
+                      data: Ptr[ /*const*/ CUnsignedChar],
+                      nelements: CInt): CInt                                    = extern //2075
+  def XChangeSaveSet(display: Ptr[Display], w: Window, change_mode: CInt): CInt = extern //2086
+  def XChangeWindowAttributes(display: Ptr[Display],
+                              w: Window,
+                              valuemask: CUnsignedLong,
+                              attributes: Ptr[XSetWindowAttributes]): CInt = extern //2092
+
   def XCheckMaskEvent(display: Display, event_mask: CLong, event_return: Ptr[XEvent]): Bool = extern //2113
   def XCheckTypedEvent(display: Display, event_type: CInt, event_return: Ptr[XEvent]): Bool = extern //2119
   def XCheckTypedWindowEvent(display: Display, w: Window, event_type: CInt, event_return: Ptr[XEvent]): Bool =
